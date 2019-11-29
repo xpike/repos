@@ -13,6 +13,7 @@ namespace XPike.Repositories
             dependencyCollection.AddXPikeCaching();
 
             dependencyCollection.RegisterSingleton<NullRepositoryDataSource, NullRepositoryDataSource>();
+            dependencyCollection.RegisterSingleton<IRepositorySettingsManager, RepositorySettingsManager>();
         }
     }
 }

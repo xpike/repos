@@ -14,13 +14,24 @@ namespace XPike.Repositories
         : IRepository<TDataSource>
         where TImplementation : class, IRepository<TDataSource>
     {
-        protected ISettings<RepositorySettings<TImplementation>> Settings { get; }
+        protected virtual ISettings<RepositorySettings<TImplementation>> Settings { get; }
 
-        protected ICachingService CachingService { get; }
+        protected virtual ICachingService CachingService { get; }
 
-        protected TDataSource DataSource { get; }
+        protected virtual TDataSource DataSource { get; }
 
-        protected ILog<TImplementation> Logger { get; }
+        protected virtual ILog<TImplementation> Logger { get; }
+
+        protected RepositoryBase(IRepositorySettingsManager settingsManager,
+            ILog<TImplementation> logger,
+            ICachingService cachingService,
+            TDataSource dataSource)
+            : this(settingsManager.GetRepositorySettings<TImplementation>(),
+                logger,
+                cachingService,
+                dataSource)
+        {
+        }
 
         protected RepositoryBase(ISettings<RepositorySettings<TImplementation>> settings,
             ILog<TImplementation> logger,
@@ -139,7 +150,7 @@ namespace XPike.Repositories
             return null;
         }
 
-        protected virtual async Task<TResult> ExecuteWithTimeout<TResult>(Func<TimeSpan, CancellationToken?, Task<TResult>> asyncOperation,
+        protected virtual async Task<TResult> ExecuteWithTimeoutAsync<TResult>(Func<TimeSpan, CancellationToken?, Task<TResult>> asyncOperation,
             TimeSpan timeout,
             bool cancelOnTimeout,
             CancellationToken? parentToken = null)
@@ -186,6 +197,9 @@ namespace XPike.Repositories
                 caller);
         }
 
+        private TimeSpan AdjustDeltaT(DateTime epoch, TimeSpan cancelAfter) =>
+            cancelAfter.Subtract(DateTime.UtcNow.Subtract(epoch));
+
         protected virtual Task<TResult> WithRepositoryAsync<TResult>(Func<TimeSpan, CancellationToken?, Task<TResult>> cacheGetAsync,
             Func<TimeSpan, CancellationToken?, Task<TResult>> dbGetAsync,
             Func<TResult, TimeSpan, CancellationToken?, Task<bool>> cacheSetAsync = null,
@@ -205,14 +219,15 @@ namespace XPike.Repositories
             };
 
             var effective = GetSettings(caller, settings);
+            var epoch = DateTime.UtcNow;
 
-            return ExecuteWithTimeout(async (cancelAfter, token) =>
+            return ExecuteWithTimeoutAsync(async (cancelAfter, token) =>
                 {
                     try
                     {
                         try
                         {
-                            var item = await cacheGetAsync(cancelAfter, token).ConfigureAwait(false);
+                            var item = await cacheGetAsync(AdjustDeltaT(epoch, cancelAfter), token).ConfigureAwait(false);
 
                             if (item != null)
                                 return item;
@@ -232,7 +247,7 @@ namespace XPike.Repositories
 
                         try
                         {
-                            liveItem = await dbGetAsync(cancelAfter, token).ConfigureAwait(false);
+                            liveItem = await dbGetAsync(AdjustDeltaT(epoch, cancelAfter), token).ConfigureAwait(false);
                         }
                         catch (Exception ex)
                         {
@@ -255,7 +270,7 @@ namespace XPike.Repositories
                                 {
                                     if (effective.WaitForCacheSet)
                                     {
-                                        if (!await cacheSetAsync(liveItem, cancelAfter, token).ConfigureAwait(false) &&
+                                        if (!await cacheSetAsync(liveItem, AdjustDeltaT(epoch, cancelAfter), token).ConfigureAwait(false) &&
                                             !effective.SuppressWarningLogs)
                                             Logger.Warn($"Failed to set item in cache: Operation returned false.", null,
                                                 metadata);
@@ -263,7 +278,7 @@ namespace XPike.Repositories
                                     else
                                     {
                                         _ = Task.Run(async () =>
-                                            await cacheSetAsync(liveItem, cancelAfter, token).ConfigureAwait(false));
+                                            await cacheSetAsync(liveItem, AdjustDeltaT(epoch, cancelAfter), token).ConfigureAwait(false));
                                     }
                                 }
                                 catch (Exception ex)
@@ -328,7 +343,9 @@ namespace XPike.Repositories
             var effective = GetSettings(caller, settings);
             metadata["EffectiveSettings"] = JsonConvert.SerializeObject(effective);
 
-            return ExecuteWithTimeout(async (cancelAfter, token) =>
+            var epoch = DateTime.UtcNow;
+
+            return ExecuteWithTimeoutAsync(async (cancelAfter, token) =>
                 {
                     try
                     {
@@ -336,7 +353,7 @@ namespace XPike.Repositories
 
                         try
                         {
-                            item = await cacheGetAsync(cancelAfter, token).ConfigureAwait(false);
+                            item = await cacheGetAsync(AdjustDeltaT(epoch, cancelAfter), token).ConfigureAwait(false);
 
                             if (IsCachedItemValid(item, false))
                                 return item.Value;
@@ -356,7 +373,7 @@ namespace XPike.Repositories
 
                         try
                         {
-                            liveItem = await dbGetAsync(cancelAfter, token).ConfigureAwait(false);
+                            liveItem = await dbGetAsync(AdjustDeltaT(epoch, cancelAfter), token).ConfigureAwait(false);
                         }
                         catch (Exception ex)
                         {
@@ -377,13 +394,13 @@ namespace XPike.Repositories
                                 {
                                     if (effective.WaitForCacheSet)
                                     {
-                                        if (!await cacheSetAsync(liveItem, cancelAfter, token).ConfigureAwait(false) &&
+                                        if (!await cacheSetAsync(liveItem, AdjustDeltaT(epoch, cancelAfter), token).ConfigureAwait(false) &&
                                             !effective.SuppressWarningLogs)
                                             Logger.Warn($"Failed to set item in cache: Operation returned false.", null, metadata);
                                     }
                                     else
                                     {
-                                        _ = Task.Run(async () => await cacheSetAsync(liveItem, cancelAfter, token).ConfigureAwait(false));
+                                        _ = Task.Run(async () => await cacheSetAsync(liveItem, AdjustDeltaT(epoch, cancelAfter), token).ConfigureAwait(false));
                                     }
                                 }
                                 catch (Exception ex)
