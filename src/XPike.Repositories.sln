@@ -1,0 +1,74 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPike.Repositories", "XPike.Repositories\XPike.Repositories.csproj", "{13E843B7-EAA6-46BE-A1ED-EBB9DEFF37EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6A0EA893-4237-4265-B1F5-825EDB20A95C}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+		..\.gitignore = ..\.gitignore
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+		common.build.props = common.build.props
+		..\xpike-pacakge-icon.png = ..\xpike-pacakge-icon.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "README", "README", "{6632C18F-F24B-4E57-8FB9-C744651EF017}"
+	ProjectSection(SolutionItems) = preProject
+		..\CHANGELOG.md = ..\CHANGELOG.md
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{5823B029-3CC0-4874-8376-80111058D19E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "netcore3", "netcore3", "{C8FADC97-CC90-4538-B391-4269111BBFBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2EFE5DC8-5953-45AD-90DC-2D2E4BCA6450}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7296E803-160A-4A7E-8B72-FA68903736E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPike.Repositories.UnitTests", "..\tests\XPike.Repositories.UnitTests\XPike.Repositories.UnitTests.csproj", "{BD869C0A-D7B7-4D02-9010-ADFC7D1069FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Library", "..\examples\Example.Library\Example.Library.csproj", "{D51C5A72-BC0A-4997-97C1-D0C82C71EC07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPikeRepos", "..\examples\netcore3\XPikeRepos\XPikeRepos.csproj", "{188BDF26-6324-4076-969F-EBD13E01BD0F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13E843B7-EAA6-46BE-A1ED-EBB9DEFF37EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13E843B7-EAA6-46BE-A1ED-EBB9DEFF37EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13E843B7-EAA6-46BE-A1ED-EBB9DEFF37EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13E843B7-EAA6-46BE-A1ED-EBB9DEFF37EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD869C0A-D7B7-4D02-9010-ADFC7D1069FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD869C0A-D7B7-4D02-9010-ADFC7D1069FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD869C0A-D7B7-4D02-9010-ADFC7D1069FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD869C0A-D7B7-4D02-9010-ADFC7D1069FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D51C5A72-BC0A-4997-97C1-D0C82C71EC07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D51C5A72-BC0A-4997-97C1-D0C82C71EC07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D51C5A72-BC0A-4997-97C1-D0C82C71EC07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D51C5A72-BC0A-4997-97C1-D0C82C71EC07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{188BDF26-6324-4076-969F-EBD13E01BD0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{188BDF26-6324-4076-969F-EBD13E01BD0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{188BDF26-6324-4076-969F-EBD13E01BD0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{188BDF26-6324-4076-969F-EBD13E01BD0F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{13E843B7-EAA6-46BE-A1ED-EBB9DEFF37EB} = {7296E803-160A-4A7E-8B72-FA68903736E9}
+		{C8FADC97-CC90-4538-B391-4269111BBFBF} = {5823B029-3CC0-4874-8376-80111058D19E}
+		{BD869C0A-D7B7-4D02-9010-ADFC7D1069FC} = {2EFE5DC8-5953-45AD-90DC-2D2E4BCA6450}
+		{D51C5A72-BC0A-4997-97C1-D0C82C71EC07} = {5823B029-3CC0-4874-8376-80111058D19E}
+		{188BDF26-6324-4076-969F-EBD13E01BD0F} = {C8FADC97-CC90-4538-B391-4269111BBFBF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3FF9D2AD-3990-4679-9627-FBB83CF994BA}
+	EndGlobalSection
+EndGlobal
