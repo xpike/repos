@@ -15,5 +15,7 @@ namespace Example.Library.Caching
             CancellationToken? ct = null);
 
         Task<ICachedItem<User>> GetUserAsync(int userId, TimeSpan? timeout = null, CancellationToken? ct = null);
+
+        Task<bool> InvalidateUserAsync(int userId, TimeSpan? timeout = null, CancellationToken? ct = null);
     }
 }

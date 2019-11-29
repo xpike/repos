@@ -40,5 +40,38 @@ namespace Example.Library.Repositories
                         TimeSpan.FromMinutes(_SET_USER_EXTENDED_TTL_MINS),
                         cancelAfter,
                         token));
+
+        public async Task<int?> CreateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null)
+        {
+            var result = await DataSource.CreateUserAsync(user, timeout, ct);
+
+            if (result != null)
+            {
+                user.UserId = result.Value;
+                _ = Task.Run(async () => await _cache.SetUserAsync(user));
+            }
+
+            return result;
+        }
+
+        public async Task<bool> UpdateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null)
+        {
+            var result = await DataSource.UpdateUserAsync(user, timeout, ct);
+            
+            if (result)
+                _ = Task.Run(async () => await _cache.InvalidateUserAsync(user.UserId, timeout, ct));
+
+            return result;
+        }
+
+        public async Task<bool> DeleteUserAsync(int userId, TimeSpan? timeout = null, CancellationToken? ct = null)
+        {
+            var result = await DataSource.DeleteUserAsync(userId, timeout, ct);
+
+            if (result)
+                _ = Task.Run(async () => await _cache.InvalidateUserAsync(userId, timeout, ct));
+
+            return result;
+        }
     }
 }

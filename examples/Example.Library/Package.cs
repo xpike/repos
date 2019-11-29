@@ -3,6 +3,7 @@ using Example.Library.DataStores;
 using Example.Library.DataStores.MySql;
 using Example.Library.Repositories;
 using XPike.IoC;
+using XPike.Repositories;
 
 namespace Example.Library
 {
@@ -11,7 +12,7 @@ namespace Example.Library
     {
         public void RegisterPackage(IDependencyCollection dependencyCollection)
         {
-            dependencyCollection.LoadPackage(new XPike.Repositories.Package());
+            dependencyCollection.AddXPikeRepositories();
 
             dependencyCollection.RegisterSingleton<IMySqlUserDataStore, MySqlUserDataStore>();
             dependencyCollection.RegisterSingleton<IUserDataStore>(collection =>

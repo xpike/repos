@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Example.Library.Models;
@@ -11,10 +13,12 @@ namespace Example.Library.DataStores
     {
         Task<User> GetUserAsync(int userId, TimeSpan? timeout = null, CancellationToken? ct = null);
 
-        Task<bool> CreateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null);
+        Task<int?> CreateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null);
 
         Task<bool> UpdateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null);
 
         Task<bool> DeleteUserAsync(int userId, TimeSpan? timeout = null, CancellationToken? ct = null);
+
+        Task<IEnumerable<User>> GetAllUsersAsync(TimeSpan? timeout = null, CancellationToken? ct = null);
     }
 }

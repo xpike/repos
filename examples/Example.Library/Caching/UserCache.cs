@@ -43,5 +43,8 @@ namespace Example.Library.Caching
                 CreateKey(userId),
                 timeout.GetValueOrDefault(TimeSpan.FromMilliseconds(_DEFAULT_CACHE_GET_TIMEOUT_MS)),
                 ct);
+
+        public Task<bool> InvalidateUserAsync(int userId, TimeSpan? timeout = null, CancellationToken? ct = null) =>
+            _cachingService.InvalidateAsync(null, CreateKey(userId));
     }
 }

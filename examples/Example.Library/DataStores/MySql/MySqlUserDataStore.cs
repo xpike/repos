@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,13 +39,12 @@ namespace Example.Library.DataStores.MySql
                             .TotalSeconds))
                     .SingleOrDefault()));
 
-        public Task<bool> CreateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null) =>
+        public Task<int?> CreateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null) =>
             WithSqlConnectionAsync(async connection =>
                 (await connection.QueryAsync<int?>(MySqlUserDataStoreSql.CREATE_USER_SQL,
                     _recordMapper.Map(user),
                     commandTimeout: (int?) timeout?.TotalSeconds))
-                .SingleOrDefault()
-                .GetValueOrDefault() == 1);
+                .SingleOrDefault());
 
         public Task<bool> UpdateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null) =>
             WithSqlConnectionAsync(async connection =>
@@ -64,5 +64,12 @@ namespace Example.Library.DataStores.MySql
                     commandTimeout: (int?) timeout?.TotalSeconds))
                 .SingleOrDefault()
                 .GetValueOrDefault() == 1);
+
+        public Task<IEnumerable<User>> GetAllUsersAsync(TimeSpan? timeout = null, CancellationToken? ct = null) =>
+            WithSqlConnectionAsync(async connection =>
+                (await connection.QueryAsync<MySqlUserRecord>(MySqlUserDataStoreSql.GET_ALL_USERS_SQL,
+                    new { },
+                    commandTimeout: (int?) timeout?.TotalSeconds))
+                .Select(_recordMapper.Map));
     }
 }

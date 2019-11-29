@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using XPike.DataStores.MySql.Pomelo;
+using XPike.IoC.Microsoft.AspNetCore;
+using XPike.Logging.Microsoft.AspNetCore;
+using XPike.Settings.AspNetCore;
 
 namespace XPikeRepos
 {
@@ -26,11 +23,21 @@ namespace XPikeRepos
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            
+            services.AddXPikeSettings()
+                .AddXPikeLogging()
+                .AddXPikeDependencyInjection()
+                .AddXPikeRepos()
+                .AddXPikePomeloMySqlDataStores();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseXPikeLogging()
+                .UseXPikeDependencyInjection();
+                //.Verify();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -42,10 +49,7 @@ namespace XPikeRepos
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

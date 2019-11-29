@@ -11,5 +11,11 @@ namespace Example.Library.Repositories
         : IRepository<IUserDataStore>
     {
         Task<User> GetUserAsync(int userId, TimeSpan? timeout = null, CancellationToken? ct = null);
+
+        Task<int?> CreateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null);
+
+        Task<bool> UpdateUserAsync(User user, TimeSpan? timeout = null, CancellationToken? ct = null);
+
+        Task<bool> DeleteUserAsync(int userId, TimeSpan? timeout = null, CancellationToken? ct = null);
     }
 }

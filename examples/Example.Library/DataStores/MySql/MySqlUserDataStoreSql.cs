@@ -2,6 +2,13 @@
 {
     public static class MySqlUserDataStoreSql
     {
+        public const string GET_ALL_USERS_SQL = @"
+SELECT
+    *
+FROM
+    users.user;
+";
+
         public const string GET_USER_SQL = @"
 SELECT
     *
