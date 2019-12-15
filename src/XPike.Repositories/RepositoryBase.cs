@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using XPike.Caching;
+using XPike.Configuration;
 using XPike.Logging;
-using XPike.Settings;
 
 namespace XPike.Repositories
 {
@@ -14,7 +14,7 @@ namespace XPike.Repositories
         : IRepository<TDataSource>
         where TImplementation : class, IRepository<TDataSource>
     {
-        protected virtual ISettings<RepositorySettings<TImplementation>> Settings { get; }
+        protected virtual IConfig<RepositoryConfig<TImplementation>> Config { get; }
 
         protected virtual ICachingService CachingService { get; }
 
@@ -22,18 +22,7 @@ namespace XPike.Repositories
 
         protected virtual ILog<TImplementation> Logger { get; }
 
-        protected RepositoryBase(IRepositorySettingsManager settingsManager,
-            ILog<TImplementation> logger,
-            ICachingService cachingService,
-            TDataSource dataSource)
-            : this(settingsManager.GetRepositorySettings<TImplementation>(),
-                logger,
-                cachingService,
-                dataSource)
-        {
-        }
-
-        protected RepositoryBase(ISettings<RepositorySettings<TImplementation>> settings,
+        protected RepositoryBase(IConfig<RepositoryConfig<TImplementation>> config,
             ILog<TImplementation> logger,
             ICachingService cachingService,
             TDataSource dataSource)
@@ -41,7 +30,7 @@ namespace XPike.Repositories
             CachingService = cachingService;
             DataSource = dataSource;
             Logger = logger;
-            Settings = settings;
+            Config = config;
         }
 
         protected virtual RepositoryOperationSettings GetOverrides(string operation, RepositoryOperationSettings specific)
@@ -49,7 +38,7 @@ namespace XPike.Repositories
             if (string.IsNullOrWhiteSpace(operation))
                 return specific;
 
-            var settings = Settings.Value;
+            var settings = Config.CurrentValue;
             settings.Operations.TryGetValue(operation, out var overrides);
 
             return new RepositoryOperationSettings
@@ -87,13 +76,13 @@ namespace XPike.Repositories
             };
         }
 
-        protected virtual RepositorySettings<TImplementation> GetSettings(string operation,
+        protected virtual RepositoryConfig<TImplementation> GetSettings(string operation,
             RepositoryOperationSettings specific)
         {
-            var settings = Settings.Value;
+            var settings = Config.CurrentValue;
             var overrides = GetOverrides(operation, specific);
 
-            return new RepositorySettings<TImplementation>
+            return new RepositoryConfig<TImplementation>
             {
                 RethrowDataSourceExceptions = overrides?.RethrowDataSourceExceptions ??
                                               settings.RethrowDataSourceExceptions,
@@ -215,7 +204,7 @@ namespace XPike.Repositories
                 {"Caller", $"{GetType()}.{caller}"},
                 {"CachingService", CachingService.GetType().ToString()},
                 {"DataSource", typeof(TDataSource).ToString()},
-                {"Settings", JsonConvert.SerializeObject(settings)}
+                {"Config", JsonConvert.SerializeObject(settings)}
             };
 
             var effective = GetSettings(caller, settings);
@@ -337,7 +326,7 @@ namespace XPike.Repositories
                 {"Caller", $"{GetType()}.{caller}"},
                 {"CachingService", CachingService.GetType().ToString()},
                 {"DataSource", typeof(TDataSource).ToString()},
-                {"Settings", JsonConvert.SerializeObject(settings)}
+                {"Config", JsonConvert.SerializeObject(settings)}
             };
 
             var effective = GetSettings(caller, settings);

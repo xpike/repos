@@ -5,6 +5,7 @@ using Example.Library.Caching;
 using Example.Library.DataStores;
 using Example.Library.Models;
 using XPike.Caching;
+using XPike.Configuration;
 using XPike.Logging;
 using XPike.Repositories;
 
@@ -20,11 +21,11 @@ namespace Example.Library.Repositories
         private readonly IUserCache _cache;
 
         public UserRepository(IUserCache cache,
-            IRepositorySettingsManager settingsManager, 
+            IConfig<RepositoryConfig<UserRepository>> config, 
             ILog<UserRepository> logger, 
             ICachingService cachingService, 
             IUserDataStore dataSource)
-            : base(settingsManager, logger, cachingService, dataSource)
+            : base(config, logger, cachingService, dataSource)
         {
             _cache = cache;
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace XPike.Repositories
 {
-    public class RepositorySettings<TRepository>
+    public class RepositoryConfig<TRepository>
         where TRepository : IRepository
     {
         public Dictionary<string, RepositoryOperationSettings> Operations { get; set; }
@@ -38,7 +38,7 @@ namespace XPike.Repositories
 
         public TimeSpan Timeout { get; set; }
 
-        public RepositorySettings()
+        public RepositoryConfig()
         {
             Operations = new Dictionary<string, RepositoryOperationSettings>();
 
