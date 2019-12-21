@@ -6,8 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="protobuf-net" Version="2.4.4" />
-    <PackageReference Include="XPike.DataStores.Dapper" Version="1.1.1" />
-    <PackageReference Include="XPike.DataStores.MySql" Version="1.1.1" />
+    <PackageReference Include="XPike.DataStores.Dapper" Version="1.1.2" />
+    <PackageReference Include="XPike.DataStores.MySql" Version="1.1.2" />
   </ItemGroup>
 
   <ItemGroup>
